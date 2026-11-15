@@ -3,12 +3,10 @@
 import math
 import os
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 app = FastAPI(
@@ -255,8 +253,3 @@ def score_scenario(request: ScoreRequest) -> dict[str, Any]:
         "scientificMeasurement": False,
         "contributions": contributions,
     }
-
-
-frontend_dir = Path(__file__).resolve().parent.parent / "dist"
-if frontend_dir.is_dir():
-    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
