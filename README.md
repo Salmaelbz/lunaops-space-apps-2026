@@ -72,6 +72,16 @@ gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8000
 
 The API provides `GET /healthz` (liveness), `GET /readyz` (readiness), `GET /api/v1/status`, `POST /api/v1/simulate`, and `POST /api/v1/score`. Vite proxies `/api`, `/healthz`, and `/readyz` to the local API server. If running the frontend and API on different origins, set `VITE_API_BASE_URL` when building the frontend and configure `CORS_ORIGINS` as a comma-separated allowlist on the API.
 
+## Deploy on Render
+
+The root `Dockerfile` builds the React frontend and serves it with the FastAPI backend from one web service. The included `render.yaml` selects Render's free web-service plan and uses `/healthz` for health checks. No database or paid add-on is required.
+
+1. In the Render Dashboard, choose **New → Blueprint** and connect this GitHub repository.
+2. Review the detected `lunaops-space-apps-2026` service and confirm the **Free** plan before applying.
+3. Wait for the first deployment, then open the public `onrender.com` URL shown in the service dashboard.
+
+Free web services spin down after 15 minutes without traffic and can take about a minute to start again. Free-tier usage limits apply; do not upgrade the service or add paid resources if you need to stay within a zero-cost budget. The application stores no persistent user data.
+
 ## Model, scoring, and scientific assumptions
 
 The API samples a simplified spherical horizon model every two hours over a 24-hour window. Solar declination and Earth libration are represented by simple periodic approximations; the model is not derived from an ephemeris. Sun elevation uses a spherical trigonometric formula. Earth visibility is only a geometric proxy above a zero-degree horizon. Terrain obstruction, detailed libration, uncertainty, refraction, surface/topographic data, RF link budgets, and relay availability are not modeled.
@@ -92,7 +102,7 @@ Those references are suggestions for future sourcing, not the source of the curr
 
 ## Configuration and project layout
 
-Copy `.env.sample` to `.env` only if you need local overrides. No secrets are required. The frontend and backend are independent processes. Azure CLI authentication was unavailable during setup, so no Azure architecture, infrastructure, or deployment is included.
+Copy `.env.sample` to `.env` only if you need local overrides. No secrets are required. The frontend and backend can run independently for local development or together in the Render Docker service.
 
 ```text
 src/

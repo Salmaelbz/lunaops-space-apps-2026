@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: lunaops-space-apps-2026
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    branch: main
